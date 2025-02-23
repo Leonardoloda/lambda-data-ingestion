@@ -12,7 +12,15 @@ class ExtractStep(Step):
             raise ValueError("Missing 'event' in kwargs")
 
         event = kwargs["event"]
+
+        if "records" not in event:
+            raise ValueError("Missing records from event")
+
         records = event.get("records")
+
+        if self.queue not in records:
+            raise ValueError(f"Wrong queue configured {self.queue}")
+
         topic_records = records.get(self.queue)
 
         values = [topic_records[i].get("value") for i in range(len(topic_records))]
