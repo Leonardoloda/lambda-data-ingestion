@@ -1,8 +1,28 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, URL
+
 
 class ConnectionFactory:
-    def __init__(self, connection_string: str):
-        self.connection_string = connection_string
+    def __init__(
+        self, username: str, password: str, database: str, port: str, host: str
+    ):
+        self.connection_string = self.create_connection_string(
+            username=username,
+            password=password,
+            database=database,
+            port=port,
+            host=host,
+        )
+
+    def create_connection_string(
+        self, username: str, password: str, database: str, port: str, host: str
+    ) -> URL:
+        return URL(
+            username=username,
+            password=password,
+            database=database,
+            port=port,
+            host=host,
+        )
 
     def create_connection(self):
-        self.connection = create_engine(self.connection_string)
+        return create_engine(self.connection_string)
