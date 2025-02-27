@@ -1,5 +1,6 @@
 from step import Step
 
+
 class ExtractStep(Step):
 
     def __init__(self, queue: str) -> None:
