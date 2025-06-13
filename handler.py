@@ -3,6 +3,7 @@ import logging
 from os import getenv
 from dotenv import load_dotenv
 
+from timer import timer
 
 from connection_factory import ConnectionFactory
 from extract_step import ExtractStep
@@ -45,6 +46,7 @@ mapper = MapStep()
 database = DatabaseStep(engine=connection)
 
 
+@timer
 def handler(event):
     try:
         logging.info("Started lambda for event: %s", event)
@@ -59,12 +61,16 @@ def handler(event):
         logging.info("parsed %s xmls", len(roots))
 
         entities = mapper.execute(roots=roots)
-        logging.info("%s about to be inserted" % len(entities))
+        logging.info("%s about to be inserted", len(entities))
 
         database.execute(entities=entities)
 
+        return {"status": 200, "message": "Event failed to process"}
+
     except ValueError as e:
         logging.error("ValueError encountered: %s", e)
+
+        return {"status": 500, "message": "Event failed to process due to an Error"}
 
 
 handler(
