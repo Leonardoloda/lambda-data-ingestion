@@ -8,7 +8,6 @@ class ConnectionFactory:
         )
 
     def create_connection_string(self, connection_config: dict) -> URL:
-        print(connection_config)
         return URL(
             drivername="mysql+pymysql",
             username=connection_config.get("username"),
